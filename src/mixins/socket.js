@@ -25,7 +25,7 @@ export default {
 
     data() {
         return {
-            info: { },
+            info: {},
             socket: {
                 token: null,
                 firstConnect: true,
@@ -37,13 +37,13 @@ export default {
             remember: (localStorage.remember !== "0"),
             allowLoginDialog: false,        // Allowed to show login dialog, but "loggedIn" have to be true too. This exists because prevent the login dialog show 0.1s in first before the socket server auth-ed.
             loggedIn: false,
-            monitorList: { },
+            monitorList: {},
             monitorTypeList: {},
             maintenanceList: {},
             apiKeyList: {},
-            heartbeatList: { },
-            avgPingList: { },
-            uptimeList: { },
+            heartbeatList: {},
+            avgPingList: {},
+            uptimeList: {},
             tlsInfoList: {},
             notificationList: [],
             dockerHostList: [],
@@ -85,7 +85,7 @@ export default {
             }
 
             // No need to connect to the socket.io for status page
-            if (! bypass && location.pathname) {
+            if (!bypass && location.pathname) {
                 for (let page of noSocketIOPages) {
                     if (location.pathname.match(page)) {
                         return;
@@ -147,7 +147,7 @@ export default {
 
             socket.on("updateMonitorIntoList", (data) => {
                 this.assignMonitorUrlParser(data);
-                Object.entries(data).forEach(([ monitorID, updatedMonitor ]) => {
+                Object.entries(data).forEach(([monitorID, updatedMonitor]) => {
                     this.monitorList[monitorID] = updatedMonitor;
                 });
             });
@@ -198,7 +198,7 @@ export default {
             });
 
             socket.on("heartbeat", (data) => {
-                if (! (data.monitorID in this.heartbeatList)) {
+                if (!(data.monitorID in this.heartbeatList)) {
                     this.heartbeatList[data.monitorID] = [];
                 }
 
@@ -231,7 +231,7 @@ export default {
             });
 
             socket.on("heartbeatList", (monitorID, data, overwrite = false) => {
-                if (! (monitorID in this.heartbeatList) || overwrite) {
+                if (!(monitorID in this.heartbeatList) || overwrite) {
                     this.heartbeatList[monitorID] = data;
                 } else {
                     this.heartbeatList[monitorID] = data.concat(this.heartbeatList[monitorID]);
@@ -299,10 +299,10 @@ export default {
          * @returns {object} list
          */
         assignMonitorUrlParser(data) {
-            Object.entries(data).forEach(([ monitorID, monitor ]) => {
+            Object.entries(data).forEach(([monitorID, monitor]) => {
                 monitor.getUrl = () => {
                     try {
-                        return new URL(monitor.url);
+                        return new URL(monitor.ping_url);
                     } catch (_) {
                         return null;
                     }
@@ -427,7 +427,7 @@ export default {
             socket.emit("loginByToken", token, (res) => {
                 this.allowLoginDialog = true;
 
-                if (! res.ok) {
+                if (!res.ok) {
                     this.logout();
                 } else {
                     this.loggedIn = true;
@@ -507,7 +507,7 @@ export default {
          * @returns {void}
          */
         getMonitorList(callback) {
-            if (! callback) {
+            if (!callback) {
                 callback = () => { };
             }
             socket.emit("getMonitorList", callback);
@@ -519,7 +519,7 @@ export default {
          * @returns {void}
          */
         getMaintenanceList(callback) {
-            if (! callback) {
+            if (!callback) {
                 callback = () => { };
             }
             socket.emit("getMaintenanceList", callback);
@@ -744,7 +744,7 @@ export default {
             for (let monitorID in this.lastHeartbeatList) {
                 let lastHeartBeat = this.lastHeartbeatList[monitorID];
 
-                if (! lastHeartBeat) {
+                if (!lastHeartBeat) {
                     result[monitorID] = unknown;
                 } else if (lastHeartBeat.status === UP) {
                     result[monitorID] = {
@@ -789,7 +789,7 @@ export default {
                 let beat = this.$root.lastHeartbeatList[monitorID];
                 let monitor = this.$root.monitorList[monitorID];
 
-                if (monitor && ! monitor.active) {
+                if (monitor && !monitor.active) {
                     result.pause++;
                 } else if (beat) {
                     result.active++;

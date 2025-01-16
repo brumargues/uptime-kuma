@@ -118,6 +118,12 @@
                                 <input id="url" v-model="monitor.url" type="url" class="form-control" pattern="https?://.+" required data-testid="url-input">
                             </div>
 
+                            <!-- Ping URL -->
+                            <div v-if="monitor.type === 'http' || monitor.type === 'keyword' || monitor.type === 'json-query' || monitor.type === 'real-browser' " class="my-3">
+                                <label for="ping_url" class="form-label">{{ $t("Ping URL") }}</label>
+                                <input id="ping_url" v-model="monitor.ping_url" type="url" class="form-control" pattern="https?://.+" required data-testid="url-input">
+                            </div>
+
                             <!-- gRPC URL -->
                             <div v-if="monitor.type === 'grpc-keyword' " class="my-3">
                                 <label for="grpc-url" class="form-label">{{ $t("URL") }}</label>
@@ -1721,6 +1727,10 @@ message HealthCheckResponse {
 
             if (this.monitor.hostname) {
                 this.monitor.hostname = this.monitor.hostname.trim();
+            }
+
+            if (this.monitor.ping_url) {
+                this.monitor.ping_url = this.monitor.ping_url.trim();
             }
 
             if (this.monitor.url) {

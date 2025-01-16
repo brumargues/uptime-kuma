@@ -122,7 +122,7 @@ async function prepareChromeExecutable(executablePath) {
             executablePath = "/usr/bin/chromium";
 
             // Install chromium in container via apt install
-            if ( !commandExistsSync(executablePath)) {
+            if (!commandExistsSync(executablePath)) {
                 await new Promise((resolve, reject) => {
                     log.info("Chromium", "Installing Chromium...");
                     let child = childProcess.exec("apt update && apt --yes --no-install-recommends install chromium fonts-indic fonts-noto fonts-noto-cjk");
